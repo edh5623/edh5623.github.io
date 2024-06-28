@@ -1,1 +1,30 @@
-"Hello World" 
+<!doctype html>
+<html lang="">
+
+<script src='https://d3js.org/d3.v5.min.js'></script>
+
+<body>
+    <h1>This is a visualization with D3</h1>
+    <svg width=100 height=350>
+    </svg>
+</body>
+
+<script>
+    var data = [4, 8, 15, 16, 23, 42];
+    d3.select('svg')
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr("cx", 50)
+        .attr("cy", function (d, i) {
+            return (i + 1) * 50
+        })
+        .attr("r", function (d) {
+            return d;
+        })
+</script>
+
+</html>
+
+<!--TODO: See how to make subpages on github io, and see if I can use a separate repo for the cs 416 project-->
