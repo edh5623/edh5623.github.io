@@ -8,29 +8,16 @@
         <br>
         <b>Let's use data from Spotify to analyze this.</b>
         <br>
-        <button id="submit_button" type="submit" class="Button">Let's go</button>
+        <button id="lets_go_button" type="submit" class="Button">Let's go</button>
     </div>
     <svg width=100 height=350>
     </svg>
 </div>
 
-<script src='https://d3js.org/d3.v5.min.js'></script>
-
-<script>
-    // var data = [4, 8, 15, 16, 23, 42];
-    // d3.select('svg')
-    //     .selectAll('circle')
-    //     .data(data)
-    //     .enter()
-    //     .append('circle')
-    //     .attr("cx", 50)
-    //     .attr("cy", function (d, i) {
-    //         return (i + 1) * 50
-    //     })
-    //     .attr("r", function (d) {
-    //         return d;
-    //     })
-
+<script type="text/javascript">
+    document.getElementById("lets_go_button").onclick = function () {
+        location.href = "narrative-vis-guide.html";
+    };
 </script>
 
 <style>
