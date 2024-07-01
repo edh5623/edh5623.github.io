@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body onload='init()'>
+        <svg></svg>
+        <button id="next_button" type="submit" class="Button">Let's go</button>
+    </body>
+
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+
+    <script>
+
+        async function init() {
+            const sp_data = await d3.csv('spotify_data.csv');
+            console.log(sp_data)
+
+            var data = [0.1, 0.5, 0.99];
+            var width = 300;
+            var height = 550;
+            var margin = 100;
+            var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 10])
+
+            d3.select('svg')
+                .attr("width", width + 2 * margin)
+                .attr("height", height + 2 * margin)
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")")
+                .selectAll('circle')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr("cx", 50)
+                .attr("cy", function (d, i) {
+                    return y(d);
+                })
+                .attr("r", 8)
+                .attr("stroke", "deepskyblue")
+                .attr("stroke-width", 3)
+                .attr("fill", "none");
+
+            d3.select('svg')
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")")
+                .call(d3.axisLeft(y).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])); // .tickFormat(d3.format("~s"))
+        }
+        // TODO: animate
+    </script>
+
+    <style>
+        .Button {
+            padding: 6px;
+            margin: 22px;
+            background: #ddd;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .Button:hover {
+            background: #ccc;
+        }
+    </style>
+</html>
