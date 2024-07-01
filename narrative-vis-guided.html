@@ -10,14 +10,15 @@
     <script>
 
         async function init() {
-            const sp_data = await d3.csv('spotify_data.csv');
+            var sp_data = await d3.csv('spotify_data.csv')
+            sp_data = sp_data.filter(function (d) { if (d.track_genre == "classical") {return d;} });
             console.log(sp_data)
 
             var data = [0.1, 0.5, 0.99];
             var width = 300;
-            var height = 550;
-            var margin = 100;
-            var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 10])
+            var height = 700;
+            var margin = 80;
+            var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
 
             d3.select('svg')
                 .attr("width", width + 2 * margin)
@@ -25,16 +26,16 @@
                 .append("g")
                 .attr("transform", "translate(" + margin + "," + margin + ")")
                 .selectAll('circle')
-                .data(data)
+                .data(sp_data)
                 .enter()
                 .append('circle')
                 .attr("cx", 50)
                 .attr("cy", function (d, i) {
-                    return y(d);
+                    return y(d.valence);
                 })
-                .attr("r", 8)
+                .attr("r", 4)
                 .attr("stroke", "deepskyblue")
-                .attr("stroke-width", 3)
+                .attr("stroke-width", 0.8)
                 .attr("fill", "none");
 
             d3.select('svg')
