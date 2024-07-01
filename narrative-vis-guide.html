@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    <body>
-        Hello World
-    </body>
+    <div>
+        <svg width=100 height=350>
+        </svg>
+    </div>
 
     <script src='https://d3js.org/d3.v5.min.js'></script>
 
@@ -20,6 +21,35 @@
         //     .attr("r", function (d) {
         //         return d;
         //     })
+
+        var data = [0.1, 0.5, 0.99];
+        var width = 100;
+        var height = 300;
+        var margin = 50;
+        var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
+
+        d3.select('svg')
+            .attr("width", width + 2 * margin)
+            .attr("height", height + 2 * margin)
+            .append("g")
+            .attr("transform", "translate('+margin+', '+margin+')")
+            .selectAll('circle')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr("cx", 50)
+            .attr("cy", function (d, i) {
+                return y(d);
+            })
+            .attr("r", 8)
+            .attr("stroke", "deepskyblue")
+            .attr("stroke-width", 3)
+            .attr("fill", "none");
+
+        d3.select('svg')
+            .append("g")
+            .attr("transform", "translate('+margin+', '+margin+')")
+            .call(d3.axisLeft(y))
 
     </script>
 </html>
