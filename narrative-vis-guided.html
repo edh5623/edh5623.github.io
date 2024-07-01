@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
+    <!-- TODO: Animate in each line -->
     <body onload='initDotPlot()'>
         <div class="main">
-            <b>Spotify has a metric associated with each song on their platoform called Valence which indicates how happy or sad a song is.</b>
+            Spotify has a measure associated with each song called <b>Valence</b> which indicates how happy or sad a song is.
             <br>
-            <b>A Valence closer to 0 indicates a song is sad, while a valence closer to 1.0 indicates a song is happy.</b>
             <br>
-            <b>Let's start by examining songs from a single genre of music that's been around for a while, classical.</b>
+            A Valence closer to <b>0.0</b> indicates a song is <b>sad</b>, while a valence closer to <b>1.0</b> indicates a song is <b>happy</b>.
+            <br>
+            <br>
+            Let's start by examining songs from a single genre of music that's been around for a while, classical.
+            <br>
+            <br>
         </div>
-        <svg></svg>
-        <button id="next_button" type="submit" class="Button">Next</button>
+        <div>
+            <svg></svg>
+            <br>
+            <text class="main">But what about this genre's music influences its valence?</text>
+            <button id="next_button" type="submit" class="Button">Next</button>
+        </div>
         <!-- TODO: ANNOTATIONS THAT POINT TO TOP AND BOTTOM -->
     </body>
 
@@ -26,8 +36,8 @@
             });
 
             var width = 200;
-            var height = 700;
-            var marginTop = 80;
+            var height = 600;
+            var marginTop = 40;
             var marginLeft = 150;
             var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
 
@@ -66,6 +76,14 @@
                 .attr("dy", ".75em")
                 .attr("transform", "rotate(-90)")
                 .text("Valence");
+
+            d3.select('svg')
+                .append("text")
+                .attr("class", "ylabel")
+                .attr("text-anchor", "end")
+                .attr("y", 20)
+                .attr("x", 500)
+                .text("Valence of 1,000 Classical Songs on Spotify");
         }
         // TODO: animate
     </script>
@@ -75,6 +93,9 @@
         .main {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
+            text-align: left;
+            margin-left: 70px;
+            margin-top: 20px;
         }
 
         .ylabel {
