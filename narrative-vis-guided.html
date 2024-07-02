@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <!-- TODO: Animate in each line -->
     <body onload='initDotPlot()'>
         <div class="main">
             Spotify has a measure associated with each song called <b>Valence</b> which indicates how happy or sad a song is.
@@ -23,10 +22,10 @@
             <text class="main">But what about this genre's music influences its valence?</text>
             <button id="next_button" type="submit" class="Button">Next</button>
         </div>
-        <!-- TODO: ANNOTATIONS THAT POINT TO TOP AND BOTTOM -->
     </body>
 
     <script src='https://d3js.org/d3.v5.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js" integrity="sha512-iBAeBWWWFb8HqSBcrqcz98iIpuVH1la39dEYHtyQ/pGpeCQTQVvLJOWAuhv2Q7JSHp9k7hWA7sGxU3hHJe+tFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
 
@@ -92,11 +91,44 @@
                 .attr("y", 20)
                 .attr("x", 500)
                 .text("Valence of 1,000 Classical Songs on Spotify");
+
+            const annotations = [
+              {
+                type: d3.annotationCalloutCircle,
+                note: {
+                    title: "A valence closer to 1.0 indicates a song is happy",
+                    label: "The number of classical songs at a high valence is sparse here.",
+                    wrap: 190
+                },
+                x: 200,
+                y: 100,
+                dy: 0,
+                dx: 120,
+                subject: { radius: 40 },
+              }, {
+                type: d3.annotationCalloutCircle,
+                note: {
+                    title: "A valence closer to 0.0 indicates a song is sad",
+                    label: "There is a dense cluster of classical songs here, indicating classic music may be more somber.",
+                    wrap: 190
+                },
+                x: 200,
+                y: height,
+                dy: -20,
+                dx: 120,
+                subject: { radius: 40 },
+              }
+            ];
+
+            const makeAnnotations = d3.annotation().annotations(annotations);
+
+            d3.select('svg')
+                .append('g')
+                .attr("class", "annotation-group")
+                .call(makeAnnotations)
         }
 
-        // TODO: animate
-
-        async function scatterplotScene() {
+        async function scatterPlotScene() {
             var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width]);
 
              // X-axis line
@@ -114,21 +146,23 @@
                 .attr("x", ((width+marginLeft)/2) + 120)
                 .text("Danceability");
 
-            // Spread the points out over the X-axis
+            // Spread the points out over the X-axis with animation
             d3.selectAll('circle')
                 .transition().duration(2600)
                 .attr("cx", function (d, i) {
                     return x(d.danceability);
                 });
 
+            // Animate and change title
             d3.selectAll("#title")
                 .transition().duration(2600)
                 .attr("x", 750)
                 .text("Valance and Danceability of 1,000 Classical Songs on Spotify")
 
+            // TODO: Change text and annotations too
         }
 
-        document.getElementById("next_button").onclick = scatterplotScene
+        document.getElementById("next_button").onclick = scatterPlotScene
     </script>
 
     <style>
@@ -157,6 +191,14 @@
 
         .Button:hover {
             background: #ccc;
+        }
+
+        .annotation-note-title, text.title {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .annotation-note-label, text.label {
+            font-family: Arial, Helvetica, sans-serif;
         }
     </style>
 </html>
