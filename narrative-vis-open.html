@@ -1,6 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-<body>
-Hello World!
-</body>
+
+    <body onload='initDotPlot()'>
+        <div id="main_text" class="main">
+            Explore what measures impact the valence of a song
+            <br>
+            <br>
+<!--            Let's start by examining songs from a single genre of music that's been around for a while, <b>classical</b>.-->
+<!--            <br>-->
+<!--            <br>-->
+        </div>
+        <div id="loader" class="main">
+            <b>Loading data...</b>
+        </div>
+        <div>
+            <svg></svg>
+            <br>
+            <text id="bottom_text" class="main">See what else correlates with valence!</text>
+        </div>
+    </body>
+
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js" integrity="sha512-iBAeBWWWFb8HqSBcrqcz98iIpuVH1la39dEYHtyQ/pGpeCQTQVvLJOWAuhv2Q7JSHp9k7hWA7sGxU3hHJe+tFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+        const width = 600;
+        const height = 600;
+        const marginTop = 60;
+        const marginLeft = 150;
+
+        async function initDotPlot() {
+            var sp_data = await d3.csv('spotify_data.csv')
+
+            // Filter to only classical
+            sp_data = sp_data.filter( function (d) {
+                if (d.track_genre == "classical") { return d; }
+            });
+
+            document.getElementById("loader").style.display = 'none'
+
+            var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
+
+            // Dots
+            d3.select('svg')
+                .attr("width", width + 2 * marginLeft)
+                .attr("height", height + 2 * marginTop)
+                .append("g")
+                .attr("transform", "translate(" + marginLeft + "," + marginTop + ")")
+                .selectAll('circle')
+                .data(sp_data)
+                .enter()
+                .append('circle')
+                .attr("cx", 50)
+                .attr("cy", function (d, i) {
+                    return y(d.valence);
+                })
+                .attr("r", 4)
+                .attr("stroke", "deepskyblue")
+                .attr("stroke-width", 0.9)
+                .attr("fill", "none");
+
+            // Y-axis line
+            d3.select('svg')
+                .append("g")
+                .attr("transform", "translate("+marginLeft+","+marginTop+")")
+                .call(d3.axisLeft(y).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]));
+
+            // Y-axis text
+            d3.select('svg')
+                .append("text")
+                .attr("class", "ylabel")
+                .attr("text-anchor", "end")
+                .attr("y", marginLeft-75)
+                .attr("x", -height/2)
+                .attr("dy", ".75em")
+                .attr("transform", "rotate(-90)")
+                .text("Valence");
+
+            // Graph title
+            d3.select('svg')
+                .append("text")
+                .attr("id", "title")
+                .attr("class", "ylabel")
+                .attr("text-anchor", "end")
+                .attr("y", 20)
+                .attr("x", 500)
+                .text("Valence of 1,000 Classical Songs on Spotify");
+
+            ////////////////
+            // Annotations
+            ////////////////
+
+            // TODO: Annotate on the drop down box to select the metric?
+        }
+    </script>
+
+    <!--TODO: Clean up this style sheet from unnecessary sections-->
+    <style>
+
+        .main {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            text-align: left;
+            margin-left: 70px;
+            margin-top: 20px;
+        }
+
+        .ylabel {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+        }
+
+        .Button {
+            padding: 6px;
+            margin: 22px;
+            background: #ddd;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .Button:hover {
+            background: #ccc;
+        }
+
+        .annotation-note-title, text.title {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .annotation-note-label, text.label {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
 </html>
