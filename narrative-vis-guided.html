@@ -2,14 +2,11 @@
 <html lang="en">
 
     <body onload='initDotPlot()'>
-        <div class="main">
+        <div id="main_text" class="main">
             Spotify has a measure associated with each song called <b>Valence</b> which indicates how happy or sad a song is.
             <br>
             <br>
-            A Valence closer to <b>0.0</b> indicates a song is <b>sad</b>, while a valence closer to <b>1.0</b> indicates a song is <b>happy</b>.
-            <br>
-            <br>
-            Let's start by examining songs from a single genre of music that's been around for a while, classical.
+            Let's start by examining songs from a single genre of music that's been around for a while, <b>classical</b>.
             <br>
             <br>
         </div>
@@ -19,7 +16,7 @@
         <div>
             <svg></svg>
             <br>
-            <text class="main">But what about this genre's music influences its valence?</text>
+            <text id="bottom_text" class="main">But what about this genre's music influences its valence?</text>
             <button id="next_button" type="submit" class="Button">Next</button>
         </div>
     </body>
@@ -92,6 +89,10 @@
                 .attr("x", 500)
                 .text("Valence of 1,000 Classical Songs on Spotify");
 
+            ////////////////
+            // Annotations
+            ////////////////
+
             const annotations = [
               {
                 type: d3.annotationCalloutCircle,
@@ -125,6 +126,7 @@
             d3.select('svg')
                 .append('g')
                 .attr("class", "annotation-group")
+                .attr("id", "annotations")
                 .call(makeAnnotations)
         }
 
@@ -159,7 +161,33 @@
                 .attr("x", 750)
                 .text("Valance and Danceability of 1,000 Classical Songs on Spotify")
 
-            // TODO: Change text and annotations too
+            // TODO: Flash the top text to indicate change?
+
+            // Change the text on the page
+            document.getElementById("main_text").innerHTML =
+                "Spotify has another measure called <b>Danceability</b> which is similar to Valence but indicates how danceable a song is.\n" +
+                "<br>\n" +
+                "<br>\n" +
+                "Let's examine the same classical songs but this time include Danceability to understand its relationship with valence." +
+                "<br>\n" +
+                "<br>\n";
+
+            document.getElementById("bottom_text").innerHTML = "So Danceability has an impact, but what else?"
+
+            document.getElementById("next_button").onclick = function () {
+                location.href = "https://edh5623.github.io/narrative-vis-open";
+            };
+
+            ////////////////
+            // Annotations
+            ////////////////
+
+            // Clear the previous annotations
+            d3.select("#annotations").transition().duration(200).remove()
+
+            // TODO Add annotations for the third scatterplot scene
+
+
         }
 
         document.getElementById("next_button").onclick = scatterPlotScene
