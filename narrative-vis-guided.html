@@ -95,29 +95,27 @@
 
             const annotations = [
               {
-                type: d3.annotationCalloutCircle,
                 note: {
                     title: "A valence closer to 1.0 indicates a song is happy",
                     label: "The number of classical songs at a high valence is sparse here.",
                     wrap: 195
                 },
-                x: 200,
+                x: 215,
                 y: 100,
                 dy: 0,
-                dx: 120,
-                subject: { radius: 40 },
+                dx: 100,
+                connector: { end: "arrow" }
               }, {
-                type: d3.annotationCalloutCircle,
                 note: {
                     title: "A valence closer to 0.0 indicates a song is sad",
                     label: "There is a dense cluster of classical songs here, indicating classic music may be more somber.",
                     wrap: 195
                 },
-                x: 200,
+                x: 215,
                 y: height,
-                dy: -20,
-                dx: 120,
-                subject: { radius: 40 },
+                dy: -1,
+                dx: 100,
+                connector: { end: "arrow" }
               }
             ];
 
@@ -193,8 +191,8 @@
                 x: 580,
                 y: 300,
                 dy: 0,
-                dx: 110,
-                subject: { radius: 40 },
+                dx: 100,
+                connector: { end: "arrow" }
               }
             ];
 
