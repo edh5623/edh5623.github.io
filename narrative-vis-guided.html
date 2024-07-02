@@ -86,6 +86,7 @@
             // Graph title
             d3.select('svg')
                 .append("text")
+                .attr("id", "title")
                 .attr("class", "ylabel")
                 .attr("text-anchor", "end")
                 .attr("y", 20)
@@ -96,7 +97,7 @@
         // TODO: animate
 
         async function scatterplotScene() {
-            var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width])
+            var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width]);
 
              // X-axis line
             d3.select('svg')
@@ -118,7 +119,13 @@
                 .transition().duration(2600)
                 .attr("cx", function (d, i) {
                     return x(d.danceability);
-                })
+                });
+
+            d3.selectAll("#title")
+                .transition().duration(2600)
+                .attr("x", 750)
+                .text("Valance and Danceability of 1,000 Classical Songs on Spotify")
+
         }
 
         document.getElementById("next_button").onclick = scatterplotScene
