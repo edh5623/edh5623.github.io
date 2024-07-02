@@ -27,6 +27,11 @@
 
     <script>
 
+        const width = 600;
+        const height = 600;
+        const marginTop = 60;
+        const marginLeft = 150;
+
         async function initDotPlot() {
             var sp_data = await d3.csv('spotify_data.csv')
 
@@ -35,10 +40,7 @@
                 if (d.track_genre == "classical") { return d; }
             });
 
-            var width = 200;
-            var height = 600;
-            var marginTop = 40;
-            var marginLeft = 150;
+
             var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
 
             // Dots
@@ -57,14 +59,14 @@
                 })
                 .attr("r", 4)
                 .attr("stroke", "deepskyblue")
-                .attr("stroke-width", 0.8)
+                .attr("stroke-width", 0.9)
                 .attr("fill", "none");
 
             // Y-axis line
             d3.select('svg')
                 .append("g")
                 .attr("transform", "translate("+marginLeft+","+marginTop+")")
-                .call(d3.axisLeft(y).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])); // .tickFormat(d3.format("~s"))
+                .call(d3.axisLeft(y).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]));
 
             // Y-axis text
             d3.select('svg')
@@ -77,6 +79,7 @@
                 .attr("transform", "rotate(-90)")
                 .text("Valence");
 
+            // Graph title
             d3.select('svg')
                 .append("text")
                 .attr("class", "ylabel")
@@ -85,7 +88,36 @@
                 .attr("x", 500)
                 .text("Valence of 1,000 Classical Songs on Spotify");
         }
+
         // TODO: animate
+
+        async function scatterplotScene() {
+            var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width])
+
+             // X-axis line
+            d3.select('svg')
+                .append("g")
+                .attr("transform", "translate("+marginLeft+","+(height+marginTop)+")")
+                .call(d3.axisBottom(x).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]));
+
+            // X-axis text
+            d3.select('svg')
+                .append("text")
+                .attr("class", "ylabel")
+                .attr("text-anchor", "end")
+                .attr("y", height+marginTop+45)
+                .attr("x", ((width+marginLeft)/2) + 120)
+                .text("Danceability");
+
+            // Spread the points out over the X-axis
+            d3.selectAll('circle')
+                .transition().duration(2600)
+                .attr("cx", function (d, i) {
+                    return x(d.danceability);
+                })
+        }
+
+        document.getElementById("next_button").onclick = scatterplotScene
     </script>
 
     <style>
