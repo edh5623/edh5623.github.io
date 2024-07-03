@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <body onload='initDotPlot()'>
+    <body onload='initScatterPlot()'>
         <div id="main_text" class="main">
             <b>Explore what measures impact the valence of a song:</b>
             <br>
@@ -9,7 +9,10 @@
             See what else correlates with a song's valence by changing the measure on the dropdown menu below!
             <br>
             <br>
-<!--TODO: Link to spotify doc to explain each measure     https://developer.spotify.com/documentation/web-api/reference/get-audio-features       -->
+            For more information about what each measure means, visit the Spotify website
+                <a href="https://developer.spotify.com/documentation/web-api/reference/get-audio-features">here</a>.
+            <br>
+            <br>
         </div>
         <div id="loader" class="main">
             <b>Loading data...</b>
@@ -17,13 +20,13 @@
         <div>
             <svg></svg>
             <br>
-            <select name="measures" id="measures" class="measures">
-                <option value="danceability">Danceability</option>
-                <option value="acousticness">Acousticness</option>
-                <option value="energy">Energy</option>
-                <option value="instrumentalness">Instrumentalness</option>
-                <option value="liveness">Liveness</option>
-                <option value="speechiness">Speechiness</option>
+            <select name="measures" id="measures" class="measures" onchange="measureSelect(this)">
+                <option value="Acousticness">Acousticness</option>
+                <option value="Danceability" selected="selected">Danceability</option>
+                <option value="Energy">Energy</option>
+                <option value="Instrumentalness">Instrumentalness</option>
+                <option value="Liveness">Liveness</option>
+                <option value="Speechiness">Speechiness</option>
             </select>
             <br>
             <button id="back_to_start_button" type="submit" class="Button">Back to the start</button>
@@ -40,7 +43,7 @@
         const marginTop = 30;
         const marginLeft = 150;
 
-        async function initDotPlot() {
+        async function initScatterPlot() {
             var sp_data = await d3.csv('spotify_data.csv')
 
             // Filter to only classical
@@ -91,8 +94,6 @@
                 .attr("transform", "rotate(-90)")
                 .text("Valence");
 
-
-
              // X-axis line
             d3.select('svg')
                 .append("g")
@@ -108,16 +109,40 @@
                 .attr("y", 17)
                 .attr("x", 775)
                 .text("Valance and Danceability of 1,000 Classical Songs on Spotify");
-
-            ////////////////
-            // Annotations
-            ////////////////
-
-            // TODO: Annotate on the drop down box to select the metric?
         }
+
+        async function measureSelect(selected) {
+            var measure = selected.value.toString()
+            var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width]);
+
+            d3.selectAll('circle')
+                .transition().duration(2600)
+                .attr("cx", function (d, i) {
+                    switch (measure) {
+                        case "Acousticness":
+                            return x(d.acousticness);
+                        case "Danceability":
+                            return x(d.danceability);
+                        case "Energy":
+                            return x(d.energy);
+                        case "Instrumentalness":
+                            return x(d.instrumentalness);
+                        case "Liveness":
+                            return x(d.liveness);
+                        case "Speechiness":
+                            return x(d.speechiness);
+                    }
+                });
+
+            d3.selectAll("#title")
+                .text("Valance and " + measure + " of 1,000 Classical Songs on Spotify")
+        }
+
+        document.getElementById("back_to_start_button").onclick = function () {
+            location.href = "https://edh5623.github.io";
+        };
     </script>
 
-    <!--TODO: Clean up this style sheet from unnecessary sections-->
     <style>
 
         .main {
@@ -147,16 +172,11 @@
             background: #ccc;
         }
 
-        .annotation-note-title, text.title {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .annotation-note-label, text.label {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
         .measures {
             margin-left: 400px;
+            width: 140px;
+            height: 20px;
+            font-size: 14px;
         }
     </style>
 </html>
