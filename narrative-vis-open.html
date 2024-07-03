@@ -3,12 +3,13 @@
 
     <body onload='initDotPlot()'>
         <div id="main_text" class="main">
-            Explore what measures impact the valence of a song
+            <b>Explore what measures impact the valence of a song:</b>
             <br>
             <br>
-<!--            Let's start by examining songs from a single genre of music that's been around for a while, <b>classical</b>.-->
-<!--            <br>-->
-<!--            <br>-->
+            See what else correlates with a song's valence by changing the measure on the dropdown menu below!
+            <br>
+            <br>
+<!--TODO: Link to spotify doc to explain each measure     https://developer.spotify.com/documentation/web-api/reference/get-audio-features       -->
         </div>
         <div id="loader" class="main">
             <b>Loading data...</b>
@@ -16,7 +17,16 @@
         <div>
             <svg></svg>
             <br>
-            <text id="bottom_text" class="main">See what else correlates with valence!</text>
+            <select name="measures" id="measures" class="measures">
+                <option value="danceability">Danceability</option>
+                <option value="acousticness">Acousticness</option>
+                <option value="energy">Energy</option>
+                <option value="instrumentalness">Instrumentalness</option>
+                <option value="liveness">Liveness</option>
+                <option value="speechiness">Speechiness</option>
+            </select>
+            <br>
+            <button id="back_to_start_button" type="submit" class="Button">Back to the start</button>
         </div>
     </body>
 
@@ -26,8 +36,8 @@
     <script>
 
         const width = 600;
-        const height = 600;
-        const marginTop = 60;
+        const height = 630;
+        const marginTop = 30;
         const marginLeft = 150;
 
         async function initDotPlot() {
@@ -40,6 +50,7 @@
 
             document.getElementById("loader").style.display = 'none'
 
+            var x = d3.scaleLinear().domain([0.0, 1.0]).range([0, width]);
             var y = d3.scaleLinear().domain([0.0, 1.0]).range([height, 0])
 
             // Dots
@@ -52,7 +63,9 @@
                 .data(sp_data)
                 .enter()
                 .append('circle')
-                .attr("cx", 50)
+                .attr("cx", function (d, i) {
+                    return x(d.danceability);
+                })
                 .attr("cy", function (d, i) {
                     return y(d.valence);
                 })
@@ -78,15 +91,23 @@
                 .attr("transform", "rotate(-90)")
                 .text("Valence");
 
+
+
+             // X-axis line
+            d3.select('svg')
+                .append("g")
+                .attr("transform", "translate("+marginLeft+","+(height+marginTop)+")")
+                .call(d3.axisBottom(x).tickValues([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]));
+
             // Graph title
             d3.select('svg')
                 .append("text")
                 .attr("id", "title")
                 .attr("class", "ylabel")
                 .attr("text-anchor", "end")
-                .attr("y", 20)
-                .attr("x", 500)
-                .text("Valence of 1,000 Classical Songs on Spotify");
+                .attr("y", 17)
+                .attr("x", 775)
+                .text("Valance and Danceability of 1,000 Classical Songs on Spotify");
 
             ////////////////
             // Annotations
@@ -115,6 +136,7 @@
         .Button {
             padding: 6px;
             margin: 22px;
+            margin-left: 70px;
             background: #ddd;
             font-size: 16px;
             border: none;
@@ -131,6 +153,10 @@
 
         .annotation-note-label, text.label {
             font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .measures {
+            margin-left: 400px;
         }
     </style>
 </html>
